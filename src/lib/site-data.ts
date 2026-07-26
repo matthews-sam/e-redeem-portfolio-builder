@@ -5,6 +5,9 @@ import {
   ClipboardList,
   Trophy,
   Dice5,
+  Hash,
+  Vote,
+  Brain,
   Globe2,
   Phone,
   MessageSquare,
@@ -42,7 +45,7 @@ export const campaigns: Campaign[] = [
   {
     slug: "short-code-to-win",
     label: "Short Code to Win",
-    icon: Sparkles,
+    icon: Hash,
     summary: "Consumers text a unique code to enter and win instantly.",
     description:
       "Short Code to Win turns any pack, receipt or on-air prompt into an instant entry. Consumers send a unique code via SMS or USSD, the Winning Code Iteration engine validates it in real time, and winners are rewarded on the spot — with no code pre-marked as winning, closing the door on stolen-code fraud.",
@@ -55,7 +58,7 @@ export const campaigns: Campaign[] = [
   {
     slug: "polls",
     label: "Polls",
-    icon: Gift,
+    icon: BarChart3,
     summary: "Capture consumer opinion at scale and reward participation.",
     description:
       "Run branded polls across web, SMS and interactive in-store screens to capture consumer sentiment in the moment. Every response is an engagement touchpoint you can reward — turning lightweight market research into a loyalty driver.",
@@ -68,7 +71,7 @@ export const campaigns: Campaign[] = [
   {
     slug: "vote",
     label: "Vote",
-    icon: Ticket,
+    icon: Vote,
     summary: "Drive mass participation with branded voting mechanics.",
     description:
       "Power fan votes, product choices and campaign showdowns with a voting mechanic built for scale. Consumers vote across every channel while you capture the audience data behind each vote.",
@@ -94,7 +97,7 @@ export const campaigns: Campaign[] = [
   {
     slug: "quizzes",
     label: "Quizzes",
-    icon: Trophy,
+    icon: Brain,
     summary: "Gamified quizzes that educate and reward.",
     description:
       "Engage consumers with branded quizzes that build product knowledge while they play. Correct answers unlock rewards, and every play deepens the relationship with your brand.",
