@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Nav, Footer } from "../components/site-chrome";
 
 function NotFoundComponent() {
   return (
@@ -78,21 +79,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "E-Redeem by Excite — Consumer Loyalty & Engagement Platform" },
-      { name: "description", content: "E-Redeem is Excite's Gen-AI powered consumer engagement platform for digitalized, fraud-proof loyalty campaigns, rewards and real-time analytics." },
+      {
+        name: "description",
+        content:
+          "E-Redeem is Excite's Gen-AI powered consumer engagement platform for digitalized, fraud-proof loyalty campaigns, rewards and real-time analytics.",
+      },
       { name: "author", content: "Excite Panacea" },
       { property: "og:title", content: "E-Redeem by Excite — Consumer Loyalty & Engagement" },
-      { property: "og:description", content: "Engage, reward and grow. Build digitalized, fraud-proof marketing campaigns with Gen-AI Winning Code Iteration." },
+      {
+        property: "og:description",
+        content:
+          "Engage, reward and grow. Build digitalized, fraud-proof marketing campaigns with Gen-AI Winning Code Iteration.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "E-Redeem by Excite" },
-      { name: "twitter:description", content: "Gen-AI powered consumer engagement & loyalty platform." },
+      {
+        name: "twitter:description",
+        content: "Gen-AI powered consumer engagement & loyalty platform.",
+      },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Blank favicon (no site logo in the browser tab).
+      { rel: "icon", href: "data:," },
     ],
   }),
   shellComponent: RootShell,
@@ -120,8 +133,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col bg-white font-sans text-slate-900 antialiased">
+        <Nav />
+        <main className="flex-1">
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
     </QueryClientProvider>
   );
 }
