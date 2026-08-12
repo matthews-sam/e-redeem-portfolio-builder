@@ -184,21 +184,21 @@ export const useCases: UseCase[] = [
     title: "Location-Based",
     tint: LIME,
     blurb:
-      "Ideal for events and activations. Drives foot traffic and localized sales by triggering offers where consumers already are.",
+      "Ideal for live events and on-ground activations, this use case delivers personalized discounts or promotions to customers within a specific geographic area. By targeting consumers locally, it encourages immediate action which successfully boosts foot traffic and enhances overall customer engagement. Ultimately, this localized approach serves as a highly effective tool to drive immediate, localized sales.",
   },
   {
     icon: CreditCard,
     title: "Transaction-Based",
     tint: CORAL,
     blurb:
-      "Triggered by purchase history to increase average transaction value and reward repeat loyalty at the till.",
+      "This campaign model delivers targeted promotions triggered directly by a customer's purchase history or past transactions. The system automatically generates personalized discounts, loyalty rewards, or bundle deals based on this specific buying behavior. This strategy is designed to encourage repeat purchases, significantly increase the average transaction value, and foster long-term brand loyalty.",
   },
   {
     icon: Target,
     title: "Segment-Based",
     tint: "#1a1a1a",
     blurb:
-      "Tailored to specific demographics or buying behaviours so every consumer segment gets a relevant mechanic.",
+      "This approach allows brands to deliver tailored promotions to specific groups based on their unique demographics, buying behaviors, or personal preferences. It creates highly personalized discounts and incentives that resonate perfectly with each distinct customer segment. By personalizing the promotional experience, this model effectively boosts consumer engagement, builds lasting loyalty, and increases overall conversion rates.",
   },
 ];
 
@@ -219,7 +219,7 @@ export const caseStudies: CaseStudy[] = [
     stat: "N100K",
     label: "Scholarships awarded",
     blurb:
-      "Ribena Back to School — N100,000 Scholarships & Airtime via under-the-crown / scratch-panel codes.",
+      "For the Back to School with Ribena campaign, consumers purchased 150ml cartons to find special scratch-panel stickers. By texting the hidden code to 65432, participants entered to win free Berry Buddies stickers or a ₦100,000 educational scholarship. The platform automatically validated these codes and efficiently credited the cash prizes to the winners.",
   },
   {
     icon: QrCode,
@@ -227,14 +227,15 @@ export const caseStudies: CaseStudy[] = [
     stat: "42K+",
     label: "QR scans processed",
     blurb:
-      "Best Premium Spirits @ Rema Live — QR code scans for instant airtime, data and physical prizes.",
+      "During the Rema Live concert, Best Premium Spirits rewarded fans through a dynamic live-event campaign. Attendees scanned a QR code or entered a 7-digit voucher found on their drinks to instantly win airtime, mobile data, or an iPhone 15 Pro Max. All physical rewards were seamlessly redeemed on-site at the event venue.",
   },
   {
     icon: Trophy,
     brand: "Guinness",
     stat: "100%",
     label: "Guaranteed airtime",
-    blurb: "Guinness — guaranteed airtime campaigns utilising unique codes.",
+    blurb:
+      "Guinness engaged football fans with a live sports promotion offering guaranteed airtime rewards. Consumers found unique codes under the crown of their drinks and texted them alongside their live match predictions to 1759. Following the matches, the system processed the winning entries and instantly credited the users' mobile phones with airtime.",
   },
 ];
 
@@ -243,10 +244,9 @@ export const brands = ["RIBENA", "GUINNESS", "REMA LIVE", "MALTA GUINNESS", "RAZ
 /* ---------------- Contact ---------------- */
 
 export const contact = {
-  address: "2 Pade Odanye Close, Harmony Enclave Estate, Adeniyi Jones, Ikeja, Lagos, Nigeria",
   phoneDisplay: "+234 705 659 2645",
   phoneHref: "tel:+2347056592645",
   email: "abamgbala@excitepanacea.com",
-  website: "www.excitepanacea.com",
-  websiteHref: "https://www.excitepanacea.com",
+  website: "www.e-reedem.com",
+  websiteHref: "https://e-redeem.com/",
 };
