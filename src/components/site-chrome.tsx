@@ -16,6 +16,15 @@ import {
 } from "lucide-react";
 
 import { CORAL, campaigns, contact } from "../lib/site-data";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { DemoRequestForm } from "@/components/demo-request-form";
+import { useDemoRequestForm } from "@/hooks/use-demo-request-form";
 
 const navLinkClass = "text-sm font-medium text-slate-600 transition-colors hover:text-slate-900";
 const navLinkActiveClass = "text-slate-900";
@@ -59,24 +68,27 @@ function CampaignsDropdown() {
           role="menu"
           className="absolute left-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]"
         >
-          {campaigns.map((c) => (
-            <Link
-              key={c.slug}
-              to="/campaigns/$campaign"
-              params={{ campaign: c.slug }}
-              role="menuitem"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
-              onClick={() => setOpen(false)}
-            >
-              <span
-                className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
-                style={{ background: `${CORAL}1a` }}
+          {campaigns.map((c) => {
+            const Icon = c.icon;
+            return (
+              <Link
+                key={c.slug}
+                to="/campaigns/$campaign"
+                params={{ campaign: c.slug }}
+                role="menuitem"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                onClick={() => setOpen(false)}
               >
-                <c.icon className="h-4 w-4" style={{ color: CORAL }} />
-              </span>
-              {c.label}
-            </Link>
-          ))}
+                <span
+                  className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
+                  style={{ background: `${CORAL}1a` }}
+                >
+                  <Icon className="h-4 w-4" style={{ color: CORAL }} />
+                </span>
+                {c.label}
+              </Link>
+            );
+          })}
           <Link
             to="/campaigns"
             role="menuitem"
@@ -107,140 +119,173 @@ const mobileLinkActiveClass =
 
 export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setMobileOpen(false);
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [mobileOpen]);
+  const [demoOpen, setDemoOpen] = useState(false);
+  const { formValues, submitted, handleChange, handleSubmit, resetForm } = useDemoRequestForm();
 
   const closeMobile = () => setMobileOpen(false);
 
+  useEffect(() => {
+    if (!demoOpen) {
+      resetForm();
+    }
+  }, [demoOpen, resetForm]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2" onClick={closeMobile}>
-          <span
-            className="grid h-8 w-8 place-items-center rounded-md font-black text-white"
-            style={{ background: CORAL }}
-          >
-            E
-          </span>
-          <span className="text-lg font-bold tracking-tight">Excite</span>
-        </Link>
-
-        <nav className="hidden items-center gap-8 md:flex">
-          <Link
-            to="/"
-            activeOptions={{ exact: true }}
-            className={navLinkClass}
-            activeProps={{ className: `${navLinkClass} ${navLinkActiveClass}` }}
-          >
-            Home
-          </Link>
-          <CampaignsDropdown />
-          {primaryLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={navLinkClass}
-              activeProps={{ className: `${navLinkClass} ${navLinkActiveClass}` }}
+    <>
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center gap-2" onClick={closeMobile}>
+            <span
+              className="grid h-8 w-8 place-items-center rounded-md font-black text-white"
+              style={{ background: CORAL }}
             >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link
-            to="/contacts"
-            className="hidden h-10 items-center rounded-md px-5 text-sm font-semibold text-white shadow-sm transition-all hover:shadow-md hover:brightness-110 md:inline-flex"
-            style={{ background: CORAL }}
-          >
-            Launch a Campaign
+              E
+            </span>
+            <span className="text-lg font-bold tracking-tight">Excite</span>
           </Link>
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-700 transition-colors hover:bg-slate-100 md:hidden"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
-      </div>
 
-      {mobileOpen && (
-        <nav className="border-t border-slate-200 bg-white md:hidden">
-          <div className="space-y-1 px-4 py-4 sm:px-6">
+          <nav className="hidden items-center gap-8 md:flex">
             <Link
               to="/"
               activeOptions={{ exact: true }}
-              className={mobileLinkClass}
-              activeProps={{ className: mobileLinkActiveClass }}
-              onClick={closeMobile}
+              className={navLinkClass}
+              activeProps={{ className: `${navLinkClass} ${navLinkActiveClass}` }}
             >
               Home
             </Link>
-
-            <div className="pt-2">
-              <div className="px-3 pb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
-                Interactive campaigns
-              </div>
-              {campaigns.map((c) => (
-                <Link
-                  key={c.slug}
-                  to="/campaigns/$campaign"
-                  params={{ campaign: c.slug }}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  onClick={closeMobile}
-                >
-                  <span
-                    className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
-                    style={{ background: `${CORAL}1a` }}
-                  >
-                    <c.icon className="h-4 w-4" style={{ color: CORAL }} />
-                  </span>
-                  {c.label}
-                </Link>
-              ))}
-              <Link
-                to="/campaigns"
-                className="block rounded-lg px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50"
-                onClick={closeMobile}
-              >
-                View all campaigns
-              </Link>
-            </div>
-
+            <CampaignsDropdown />
             {primaryLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className={mobileLinkClass}
-                activeProps={{ className: mobileLinkActiveClass }}
-                onClick={closeMobile}
+                className={navLinkClass}
+                activeProps={{ className: `${navLinkClass} ${navLinkActiveClass}` }}
               >
                 {l.label}
               </Link>
             ))}
+          </nav>
 
-            <Link
-              to="/contacts"
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-110"
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="hidden h-10 items-center rounded-md px-5 text-sm font-semibold text-white shadow-sm transition-all hover:shadow-md hover:brightness-110 cursor-pointer md:inline-flex"
               style={{ background: CORAL }}
-              onClick={closeMobile}
+              onClick={() => setDemoOpen(true)}
             >
-              Launch a Campaign
-            </Link>
+              Request a Demo
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-700 transition-colors hover:bg-slate-100 md:hidden"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((v) => !v)}
+            >
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
-        </nav>
-      )}
-    </header>
+        </div>
+
+        {mobileOpen && (
+          <nav className="border-t border-slate-200 bg-white md:hidden">
+            <div className="space-y-1 px-4 py-4 sm:px-6">
+              <Link
+                to="/"
+                activeOptions={{ exact: true }}
+                className={mobileLinkClass}
+                activeProps={{ className: mobileLinkActiveClass }}
+                onClick={closeMobile}
+              >
+                Home
+              </Link>
+
+              <div className="pt-2">
+                <div className="px-3 pb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                  Interactive campaigns
+                </div>
+                {campaigns.map((c) => {
+                  const Icon = c.icon;
+                  return (
+                    <Link
+                      key={c.slug}
+                      to="/campaigns/$campaign"
+                      params={{ campaign: c.slug }}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                      onClick={closeMobile}
+                    >
+                      <span
+                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
+                        style={{ background: `${CORAL}1a` }}
+                      >
+                        <Icon className="h-4 w-4" style={{ color: CORAL }} />
+                      </span>
+                      {c.label}
+                    </Link>
+                  );
+                })}
+                <Link
+                  to="/campaigns"
+                  className="block rounded-lg px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+                  onClick={closeMobile}
+                >
+                  View all campaigns
+                </Link>
+              </div>
+
+              {primaryLinks.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className={mobileLinkClass}
+                  activeProps={{ className: mobileLinkActiveClass }}
+                  onClick={closeMobile}
+                >
+                  {l.label}
+                </Link>
+              ))}
+
+              <button
+                type="button"
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-110 cursor-pointer"
+                style={{ background: CORAL }}
+                onClick={() => {
+                  setDemoOpen(true);
+                  closeMobile();
+                }}
+              >
+                Request a Demo
+              </button>
+            </div>
+          </nav>
+        )}
+      </header>
+
+      <Dialog open={demoOpen} onOpenChange={setDemoOpen}>
+        <DialogContent className="max-w-3xl sm:max-w-4xl text-base">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-semibold leading-tight text-slate-900">
+              Request a demo
+            </DialogTitle>
+            <DialogDescription className="text-base text-slate-700">
+              Share a few details and we’ll reach out to schedule your demo.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DemoRequestForm
+            formValues={formValues}
+            submitted={submitted}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+            showCancel
+            onCancel={() => setDemoOpen(false)}
+            ctaLabel="Submit request"
+            cancelLabel="Cancel"
+            idPrefix="modal"
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -311,10 +356,6 @@ export function Footer() {
               Contact
             </div>
             <ul className="mt-4 space-y-2.5 text-sm text-slate-600">
-              <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0" style={{ color: CORAL }} />
-                <span>{contact.address}</span>
-              </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 shrink-0" style={{ color: CORAL }} />
                 <a href={contact.phoneHref} className="hover:text-slate-900">
@@ -347,16 +388,6 @@ export function Footer() {
               <li>
                 <a href="#" className="hover:text-slate-900">
                   Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-slate-900">
-                  Data Processing
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-slate-900">
-                  Compliance
                 </a>
               </li>
             </ul>
