@@ -247,6 +247,6 @@ export const contact = {
   phoneDisplay: "+234 705 659 2645",
   phoneHref: "tel:+2347056592645",
   email: "abamgbala@excitepanacea.com",
-  website: "www.e-reedem.com",
+  website: "www.e-redeem.com",
   websiteHref: "https://e-redeem.com/",
 };
