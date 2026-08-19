@@ -6,7 +6,20 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi"] },
+  {
+    ignores: [
+      "dist",
+      ".output",
+      ".vinxi",
+      // Vendored verbatim from the e-redeem-frontend repo — kept byte-identical
+      // so a re-sync is a straight file copy. Linting them would reformat them
+      // (this config makes prettier violations errors) and the source repo uses
+      // no semicolons and single quotes. See the alias block in styles.css.
+      "src/shared",
+      "src/systems",
+      "src/campaigns",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

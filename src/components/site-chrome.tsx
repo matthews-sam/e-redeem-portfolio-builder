@@ -15,7 +15,7 @@ import {
   Instagram,
 } from "lucide-react";
 
-import { CORAL, campaigns, contact } from "../lib/site-data";
+import { CORAL, campaigns, contact, type DemoKind } from "../lib/site-data";
 import {
   Dialog,
   DialogContent,
@@ -25,13 +25,35 @@ import {
 } from "@/components/ui/dialog";
 import { DemoRequestForm } from "@/components/demo-request-form";
 import { useDemoRequestForm } from "@/hooks/use-demo-request-form";
+import RedeemModal from "@/systems/redeem/components/RedeemModal";
+import type { RedeemSubmission } from "@/systems/redeem/components/RedeemModal";
+import WinToast from "@/systems/redeem/components/WinToast";
+import QuizModal from "@/campaigns/sites/QuizModal";
+import RaffleModal from "@/campaigns/sites/RaffleModal";
 
 const navLinkClass = "text-sm font-medium text-slate-600 transition-colors hover:text-slate-900";
 const navLinkActiveClass = "text-slate-900";
 
+/* Shared by the desktop dropdown and the mobile menu so the two campaign lists
+ * can't drift apart. */
+function CampaignRowContent({ campaign }: { campaign: (typeof campaigns)[number] }) {
+  const Icon = campaign.icon;
+  return (
+    <>
+      <span
+        className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
+        style={{ background: `${CORAL}1a` }}
+      >
+        <Icon className="h-4 w-4" style={{ color: CORAL }} />
+      </span>
+      {campaign.label}
+    </>
+  );
+}
+
 /* ---------------- Interactive campaigns dropdown ---------------- */
 
-function CampaignsDropdown() {
+function CampaignsDropdown({ onDemo }: { onDemo: (kind: DemoKind) => void }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,6 +73,9 @@ function CampaignsDropdown() {
     };
   }, [open]);
 
+  const rowClass =
+    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50";
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -69,23 +94,31 @@ function CampaignsDropdown() {
           className="absolute left-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]"
         >
           {campaigns.map((c) => {
-            const Icon = c.icon;
-            return (
+            // Captured in a const so the narrowing survives into the callback.
+            const demo = c.demo;
+            return demo ? (
+              <button
+                key={c.slug}
+                type="button"
+                role="menuitem"
+                className={`${rowClass} cursor-pointer`}
+                onClick={() => {
+                  setOpen(false);
+                  onDemo(demo);
+                }}
+              >
+                <CampaignRowContent campaign={c} />
+              </button>
+            ) : (
               <Link
                 key={c.slug}
                 to="/campaigns/$campaign"
                 params={{ campaign: c.slug }}
                 role="menuitem"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                className={rowClass}
                 onClick={() => setOpen(false)}
               >
-                <span
-                  className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
-                  style={{ background: `${CORAL}1a` }}
-                >
-                  <Icon className="h-4 w-4" style={{ color: CORAL }} />
-                </span>
-                {c.label}
+                <CampaignRowContent campaign={c} />
               </Link>
             );
           })}
@@ -120,6 +153,10 @@ const mobileLinkActiveClass =
 export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
+  // Which campaign demo modal is open, if any.
+  const [demo, setDemo] = useState<DemoKind | null>(null);
+  // Toast copy after a successful code redemption; null while none is queued.
+  const [prize, setPrize] = useState<string | null>(null);
   const { formValues, submitted, handleChange, handleSubmit, resetForm } = useDemoRequestForm();
 
   const closeMobile = () => setMobileOpen(false);
@@ -129,6 +166,12 @@ export function Nav() {
       resetForm();
     }
   }, [demoOpen, resetForm]);
+
+  useEffect(() => {
+    if (!prize) return;
+    const timer = setTimeout(() => setPrize(null), 4500);
+    return () => clearTimeout(timer);
+  }, [prize]);
 
   return (
     <>
@@ -153,7 +196,7 @@ export function Nav() {
             >
               Home
             </Link>
-            <CampaignsDropdown />
+            <CampaignsDropdown onDemo={setDemo} />
             {primaryLinks.map((l) => (
               <Link
                 key={l.to}
@@ -205,22 +248,31 @@ export function Nav() {
                   Interactive campaigns
                 </div>
                 {campaigns.map((c) => {
-                  const Icon = c.icon;
-                  return (
+                  const mobileRowClass =
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50";
+                  // Captured in a const so the narrowing survives into the callback.
+                  const demoKind = c.demo;
+                  return demoKind ? (
+                    <button
+                      key={c.slug}
+                      type="button"
+                      className={`${mobileRowClass} cursor-pointer`}
+                      onClick={() => {
+                        closeMobile();
+                        setDemo(demoKind);
+                      }}
+                    >
+                      <CampaignRowContent campaign={c} />
+                    </button>
+                  ) : (
                     <Link
                       key={c.slug}
                       to="/campaigns/$campaign"
                       params={{ campaign: c.slug }}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                      className={mobileRowClass}
                       onClick={closeMobile}
                     >
-                      <span
-                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md"
-                        style={{ background: `${CORAL}1a` }}
-                      >
-                        <Icon className="h-4 w-4" style={{ color: CORAL }} />
-                      </span>
-                      {c.label}
+                      <CampaignRowContent campaign={c} />
                     </Link>
                   );
                 })}
@@ -285,6 +337,21 @@ export function Nav() {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Playable campaign demos, launched from the campaigns dropdown. These
+       * render null while closed (see useDelayedUnmount) and own their own
+       * reset-on-close behaviour, so mounting them permanently is cheap. */}
+      <RedeemModal
+        isOpen={demo === "code"}
+        onClose={() => setDemo(null)}
+        onSubmit={({ firstName, code }: RedeemSubmission) => {
+          setDemo(null);
+          setPrize(`Thanks ${firstName} — code ${code} won ₦200 airtime.`);
+        }}
+      />
+      <QuizModal isOpen={demo === "quiz"} onClose={() => setDemo(null)} />
+      <RaffleModal isOpen={demo === "raffle"} onClose={() => setDemo(null)} />
+      <WinToast visible={!!prize} prizeName={prize} onClose={() => setPrize(null)} />
     </>
   );
 }

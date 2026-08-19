@@ -29,6 +29,9 @@ export const LIME = "#A8E10C";
 
 /* ---------------- Interactive campaigns ---------------- */
 
+/** Campaigns with a live, playable demo modal wired into the nav dropdown. */
+export type DemoKind = "code" | "quiz" | "raffle";
+
 export type Campaign = {
   slug: string;
   label: string;
@@ -39,6 +42,11 @@ export type Campaign = {
   description: string;
   /** Key selling points shown on the campaign's own page. */
   points: string[];
+  /**
+   * Set when this campaign has a playable demo. The nav dropdown renders these
+   * entries as buttons that open the demo in place instead of navigating.
+   */
+  demo?: DemoKind;
 };
 
 export const campaigns: Campaign[] = [
@@ -54,6 +62,7 @@ export const campaigns: Campaign[] = [
       "Fraud-proof Winning Code Iteration (WCI) winner allocation",
       "Real-time winner verification and reward dispatch",
     ],
+    demo: "code",
   },
   {
     slug: "polls",
@@ -106,6 +115,7 @@ export const campaigns: Campaign[] = [
       "Instant rewards for correct answers",
       "Product education built into the play",
     ],
+    demo: "quiz",
   },
   {
     slug: "raffle-draws",
@@ -119,6 +129,7 @@ export const campaigns: Campaign[] = [
       "Instant-win and grand-prize tiers",
       "Verifiable, auditable draw results",
     ],
+    demo: "raffle",
   },
 ];
 
